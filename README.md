@@ -1,5 +1,7 @@
 ## Implementation of the binary Knapsack Problem with a genetic algorithm approach.  
 
+This repository is forked from https://github.com/edervishaj/genetic-knapsack and adapted for educational purposes.
+
 The input to the solver (KnapSackGA.java) is a file called **init.txt** which contains in each line the followings:
 1. number of items (e.g. 7)
 2. value of each item (space separated) (e.g. 1 2 3 4 5 6 7)
