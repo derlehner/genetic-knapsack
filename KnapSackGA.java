@@ -1,3 +1,4 @@
+package knapsack;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -36,15 +37,24 @@ public class KnapSackGA {
         
         CandidateSolutions = new ArrayList<String>();
         
+
+    }
+
+    public void perform(){
         // Initialize first generation
         generateSolutions(KnapSackGA.noCandidates);
-        
-        // Run the GA until required fitness achieved or
-        for(int k = 0; k < KnapSackGA.maxGen && (bestFitness < (0.9*knapsackSize)); k++){
+
+        String bestSolution;
+        double bestWeight;
+        // Run the GA for 100 generations
+        for(int k = 0; (k < KnapSackGA.maxGen) ; k++){
+            bestSolution = getBestSolution();
+            bestWeight = calcWeight(bestSolution) * 100;
             System.out.print("Generation: " + (k+1));
-            System.out.print(" " + "Best solution:" + getBestSolution());
-            System.out.println(" " + "Best value:" + bestFitness);
-            newGen();
+            System.out.print(" " + "Best solution:" + bestSolution);
+            System.out.print(", " + "Fitness = " + this.bestFitness);
+            System.out.println(", " + "Utilization = " + bestWeight + " %");
+            newGeneration();
         }
     }
     
@@ -101,8 +111,26 @@ public class KnapSackGA {
         if(weight <= knapsackMaxSize)
             return fit;
         else
-            return -1;
+        	// here was the change wrt the initial solution. -1 is not enough to reason about overloaded bags
+            return knapsackMaxSize-weight;
     }
+    
+ // This method calculates the fitness of a given candidate solution
+    private double calcWeight(String solution){
+        double weight = 0;
+        
+        // We iterate over all the candidate solution genes.
+        for(int i = 0; i < solution.length(); i++){
+            // If gene is 1, respective item is taken into the knapsack
+            if(solution.charAt(i) == 49){
+                weight += weights[i];
+
+            }
+        }
+
+        return (weight/knapsackMaxSize);
+    }
+    
     
     // This method generates new offsprings from two potentially best solutions
     private String crossOver(String candidate1, String candidate2){
@@ -155,12 +183,14 @@ public class KnapSackGA {
     
     // This method returns the best solution out of the current generation
     private String getBestSolution(){
-        double bestFit = -1;
+        double bestFit = -10000;
         String bestSol = null;
         
         // Iterate over all the generation
         for (String CandidateSolution : CandidateSolutions) {
+        	//System.out.println(CandidateSolution);
             double newFit = calcFitness(CandidateSolution);
+            //System.out.println(newFit);
             if(newFit != -1){
                 // If a better fit found
                 // update bestSol variable
@@ -178,7 +208,8 @@ public class KnapSackGA {
     // This method takes the 1st and 2nd best candidate solutions
     // and creates a new generation through crossovering them
     // and mutating the new generation
-    private void newGen(){
+    private void newGeneration(){
+
         // Get first best candidate solution
         String can1 = getBestSolution();
         
@@ -187,16 +218,30 @@ public class KnapSackGA {
         
         // Get first best candidate solution
         String can2 = getBestSolution();
-        
+
         // Create new generation
         CandidateSolutions = new ArrayList<String>();
         
         // Add the best solution thus far
         CandidateSolutions.add(can1);
         
+        //System.out.println(can1 + " " +can2);
+        
         // Create all new offsprings from crossover and mutation
         for(int i = 1; i < noCandidates; i++){
             CandidateSolutions.add(mutate(crossOver(can1, can2)));
         }
+    }
+
+    private void performSelection(){
+
+    }
+
+    private void performReproduction(){
+
+    }
+
+    private void performMutation(){
+
     }
 }

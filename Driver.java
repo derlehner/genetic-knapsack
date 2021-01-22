@@ -1,3 +1,4 @@
+package knapsack;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -14,12 +15,14 @@ public class Driver {
     public static double mutatProb;
     
     public static void main(String[] args){
-        readInit("init.txt");
+        readInit("./src/knapsack/init.txt");
         KnapSackGA knapsack = new KnapSackGA(noItems, value, weight, knapsackSize, populationSize, maxGenerations, crossProb, mutatProb);
+        knapsack.perform();
     }
     
     private static void readInit(String filename){
         try {
+            System.out.println(filename);
             Scanner input = new Scanner(new File(filename));
             noItems = input.nextInt();
             value = new double[noItems];
@@ -29,7 +32,7 @@ public class Driver {
             for(int i = 0; i < noItems; i++)
                 weight[i] = input.nextDouble();
             knapsackSize = input.nextDouble();
-            populationSize= input.nextInt();
+            populationSize = input.nextInt();
             maxGenerations = input.nextInt();
             crossProb = input.nextDouble();
             mutatProb = input.nextDouble();
